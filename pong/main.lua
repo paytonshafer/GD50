@@ -114,6 +114,12 @@ function love.load()
     -- 3. 'play' (the ball is in play, bouncing between paddles)
     -- 4. 'done' (the game is over, with a victor, ready for restart)
     gameState = 'start'
+
+    -- the state of the players can be any of the following
+    -- 1. 2 (for two player game play, both paddles controlled by humans)
+    -- 2. 1 (for one player game play, player1 paddles controlled by human)
+    -- 3. 0 (for computer v computer game play, both paddles controlled by computer)
+    playerState = 2
 end
 
 --[[
@@ -229,25 +235,44 @@ function love.update(dt)
         end
     end
 
-    --
-    -- paddles can move no matter what state we're in
-    --
-    -- player 1
-    if love.keyboard.isDown('w') then
-        player1.dy = -PADDLE_SPEED
-    elseif love.keyboard.isDown('s') then
-        player1.dy = PADDLE_SPEED
-    else
-        player1.dy = 0
-    end
+    
+    if playerState == 2 then
+        -- player 1
+        if love.keyboard.isDown('w') then
+            player1.dy = -PADDLE_SPEED
+        elseif love.keyboard.isDown('s') then
+            player1.dy = PADDLE_SPEED
+        else
+            player1.dy = 0
+        end
 
-    -- player 2
-    if love.keyboard.isDown('up') then
-        player2.dy = -PADDLE_SPEED
-    elseif love.keyboard.isDown('down') then
-        player2.dy = PADDLE_SPEED
+        -- player 2
+        if love.keyboard.isDown('up') then
+            player2.dy = -PADDLE_SPEED
+        elseif love.keyboard.isDown('down') then
+            player2.dy = PADDLE_SPEED
+        else
+            player2.dy = 0
+        end
+
+    elseif playerState == 1 then
+        -- player 1
+        if love.keyboard.isDown('w') then
+            player1.dy = -PADDLE_SPEED
+        elseif love.keyboard.isDown('s') then
+            player1.dy = PADDLE_SPEED
+        else
+            player1.dy = 0
+        end
+
+        -- player 2
+        player2.y = ball.y - 10
     else
-        player2.dy = 0
+
+        -- player 1
+        player1.y = ball.y - 10
+        -- player 2
+        player2.y = ball.y - 10
     end
 
     -- update our ball based on its DX and DY only if we're in play state;
@@ -267,6 +292,10 @@ end
     things to happen right away, just once, like when we want to quit.
 ]]
 function love.keypressed(key)
+    if key == '1' then
+        playerState = 1
+    end
+
     -- `key` will be whatever key this callback detected as pressed
     if key == 'escape' then
         -- the function LÖVE2D uses to quit the application
@@ -296,6 +325,18 @@ function love.keypressed(key)
                 servingPlayer = 1
             end
         end
+    elseif key == '9' then
+        gameState = 'start'
+        ball:reset()
+        player1Score = 0
+        player2Score = 0
+        servingPlayer = 1
+    elseif key == '2' then
+        playerState = 2
+    elseif key == '1' then
+        playerState = 1
+    elseif key == '0' then
+        playerState = 0
     end
 end
 
@@ -314,7 +355,9 @@ function love.draw()
         -- UI messages
         love.graphics.setFont(smallFont)
         love.graphics.printf('Welcome to Pong!', 0, 10, VIRTUAL_WIDTH, 'center')
-        love.graphics.printf('Press Enter to begin!', 0, 20, VIRTUAL_WIDTH, 'center')
+        love.graphics.printf('Current mode: ' .. getPlayerMode(), 0, 20, VIRTUAL_WIDTH, 'center')
+        love.graphics.printf('Press 2 for PvP, 1 for PvC, 0 for CvC', 0, 30, VIRTUAL_WIDTH, 'center')
+        love.graphics.printf('Press Enter to begin and 9 to reset the game!', 0, 40, VIRTUAL_WIDTH, 'center')
     elseif gameState == 'serve' then
         -- UI messages
         love.graphics.setFont(smallFont)
@@ -366,4 +409,14 @@ function displayFPS()
     love.graphics.setFont(smallFont)
     love.graphics.setColor(0, 1, 0, 1)
     love.graphics.print('FPS: ' .. tostring(love.timer.getFPS()), 10, 10)
+end
+
+function getPlayerMode()
+    if playerState == 2 then
+        return 'PvP'
+    elseif playerState == 1 then
+        return 'PvC'
+    else
+        return 'CvC'
+    end
 end
