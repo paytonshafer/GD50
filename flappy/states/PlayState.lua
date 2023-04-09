@@ -90,9 +90,9 @@ function PlayState:update(dt)
                 sounds['explosion']:play()
                 sounds['hurt']:play()
 
-                --gStateMachine:change('score', {
-                    --score = self.score
-                --})
+                gStateMachine:change('score', {
+                    score = self.score
+                })
             end
         end
     end

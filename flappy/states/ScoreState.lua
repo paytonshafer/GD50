@@ -37,7 +37,7 @@ function ScoreState:render()
     love.graphics.setFont(mediumFont)
     love.graphics.printf('Score: ' .. tostring(self.score), 0, 100, VIRTUAL_WIDTH, 'center')
     
-    if self.score > 20 then
+    if self.score > 25 then
         love.graphics.draw(gold, VIRTUAL_WIDTH/2 - 20, 110, 0, 40/gold:getWidth(), 90/gold:getHeight())
     elseif self.score > 10 then
         love.graphics.draw(silver, VIRTUAL_WIDTH/2 - 20, 110, 0, 40/silver:getWidth(), 90/silver:getHeight())
