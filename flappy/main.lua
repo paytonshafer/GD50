@@ -38,7 +38,6 @@ require 'states/CountdownState'
 require 'states/PlayState'
 require 'states/ScoreState'
 require 'states/TitleScreenState'
-require 'states/PauseState'
 
 require 'Bird'
 require 'Pipe'
@@ -156,14 +155,16 @@ function love.mouse.wasPressed(button)
 end
 
 function love.update(dt)
-    -- scroll our background and ground, looping back to 0 after a certain amount
-    backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_LOOPING_POINT
-    groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % VIRTUAL_WIDTH
+    if scrolling then
+        -- scroll our background and ground, looping back to 0 after a certain amount
+        backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_LOOPING_POINT
+        groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % VIRTUAL_WIDTH
+    end
 
-    gStateMachine:update(dt)
+        gStateMachine:update(dt)
 
-    love.keyboard.keysPressed = {}
-    love.mouse.buttonsPressed = {}
+        love.keyboard.keysPressed = {}
+        love.mouse.buttonsPressed = {}
 end
 
 function love.draw()
