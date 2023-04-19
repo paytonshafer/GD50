@@ -10,7 +10,7 @@ may be adding your own levels or implementing new features. The final project is
 Ensure that you have LÖVE2D downloaded and that you can use it. _add part about C#/Unity_. Then download all the source code.
 
 # Usage
-For Pong, Fifty Bird, Breakout, ... (add them as I do them):
+For Pong, Flappy Bird, Breakout, ... (add them as I do them):
 cd into the proper directory of the game you want to run, then run this command to start the game:
 ```sh
 love ./
